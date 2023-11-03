@@ -1,3 +1,10 @@
+const names = ['Carol', 'Jim', 'Daniel', 'Sarah', 'Emily', 'Alex'];
+const occupations = ['Programer', 'Photographer', 'Model', 'Artist'];
+const NAME_LIST = document.getElementById('name');
+const JOB_LIST = document.getElementById('occupation');
+const PRICE_LIST = document.getElementById('price');
+const SENTENCE = document.querySelector('p');
+
 const freelancers = [
     {
         name: "Alice",
@@ -9,125 +16,70 @@ const freelancers = [
         occupation: "Teacher",
         price: 50,
     },
-    {
-        name: "Carol",
-        occupation: "Programmer",
-        price: 85,
-    },
-    {
-        name: "Jim",
-        occupation: "Photogragher",
-        price: 60,
-    },
-    {
-        name: "Daniel",
-        occupation: "Model",
-        price: 35,
-    },
-    {
-        name: "Sarah",
-        occupation: "Artist",
-        price: 60,
-    },
-    {
-        name: "Emily",
-        occupation: "Cook",
-        price: 28,
-    },
 ];
 
-function priceDisplay() {
-    let averageAmount = document.querySelector('p');
-    for(const key of Object.keys(freelancers)) {
-        let number = freelancers[key].price;
-        let sum = number.price.reduce((accumulator, currentValue) => {
-            accumulator + currentValue;
-        }, 0);
-    }
-    let text = `The average starting price is $${sum}.`
-    averageAmount.appendChild(document.createTextNode(text));
-}
+const sumOfCost = freelancers[0].price + freelancers[1].price;
+let averageCost = sumOfCost / freelancers.length;
+let text = document.createTextNode(`The average starting price is $${averageCost}`);
+SENTENCE.appendChild(text);
 
-function render(arr) {
-    for(const key of Object.keys(arr)) {
-        if(key < 2) {
-            const names = document.getElementById('name');
-        let text = arr[key].name;
-        const item = document.createElement('li')
-        item.appendChild(document.createTextNode(text));
-        names.appendChild(item);
-       
-        const job = document.getElementById('occupation');
-        let textOne = arr[key].occupation;
-        const itemOne = document.createElement('li')
-        itemOne.appendChild(document.createTextNode(textOne));
-        job.appendChild(itemOne);
-   
-        const price = document.getElementById('price');
-        let textTwo = `$${arr[key].price}`;
-        const itemTwo = document.createElement('li')
-        itemTwo.setAttribute('class','listItem')
-        itemTwo.appendChild(document.createTextNode(textTwo));
-        price.appendChild(itemTwo);
-       }
-    } 
-      priceDisplay();
-}
-
-render(freelancers);
-
-function timer(arr) {
-    let index = 2;
-    const loop = setInterval(() => { 
-        if (index === arr.length - 1) { 
-            clearInterval(loop) 
-        } 
+function render() {
+     NAME_LIST.innerHTML = '';
+     JOB_LIST.innerHTML = '';
+     PRICE_LIST.innerHTML = '';
+     for(const freelancer of freelancers) {
+        const nameItem = document.createElement('li')
+        nameItem.appendChild(document.createTextNode(freelancer.name));
+        NAME_LIST.appendChild(nameItem);
         
-            const names = document.getElementById('name');
-            let personName = freelancers[index++];
-            let text = personName.name;
-            const item = document.createElement('li')
-            item.appendChild(document.createTextNode(text));
-            names.appendChild(item);
-    }, 3000);
+       
+        const occupationItem = document.createElement('li')
+        occupationItem.appendChild(document.createTextNode(freelancer.occupation));
+        JOB_LIST.appendChild(occupationItem);
+
+        
+        const priceItem = document.createElement('li')
+        priceItem.setAttribute('class','listItem')
+        priceItem.appendChild(document.createTextNode(`$${freelancer.price}`));
+        PRICE_LIST.appendChild(priceItem);
+     }
 }
 
-function timerTwo(arr) {
-let index = 2;
+render();
+
+function generateFreelancer() {
+  const randomNameIndex = Math.floor(Math.random() * names.length);
+  const randomOccupationIndex = Math.floor(Math.random() * occupations.length);
+  const randomFreelancerName = names[randomNameIndex];
+  const randomFreelancerOccupation = occupations[randomOccupationIndex]
+  const randomPrice = Math.floor(Math.random() * 100);
+  
+  return {
+    name: randomFreelancerName,
+    occupation: randomFreelancerOccupation,
+    price: randomPrice,
+  }
+}
+
 const loop = setInterval(() => { 
-    if (index === arr.length - 1) { 
-        clearInterval(loop) 
-    } 
-    const jobs = document.getElementById('occupation');
-    let personJob = freelancers[index++];
-    let textOne = personJob.occupation;
-    const itemOne = document.createElement('li')
-    itemOne.appendChild(document.createTextNode(textOne));
-    jobs.appendChild(itemOne);
-
+        const newFreelancer = generateFreelancer();
+        freelancers.push(newFreelancer);
+      render();
 }, 3000);
-}
 
-function timerThree(arr) {
-let index = 2;
-const loop = setInterval(() => { 
-    if (index === arr.length - 1) { 
-        clearInterval(loop) 
-    } 
-    const prices = document.getElementById('price');
-    let personPrice = freelancers[index++];
-    let textTwo = `$${personPrice.price}`;
-    const itemTwo = document.createElement('li')
-    itemTwo.setAttribute('class','listItem')
-    itemTwo.appendChild(document.createTextNode(textTwo));
-    prices.appendChild(itemTwo);
-
+const updateAverageStartingPrice = setInterval(() => { 
+    let sum = 0;
+    for(const key in freelancers) {
+        let freelancer = freelancers[key];
+        let freelancerPrice = freelancer.price;
+        sum += freelancerPrice;
+        let averageCostCalc = sum / freelancers.length
+        averageCost = Math.round(averageCostCalc);
+        SENTENCE.innerHTML = '';
+        text = document.createTextNode(`The average starting price is $${averageCost}`);
+        SENTENCE.appendChild(text);
+     }
 }, 3000);
-}
-
-timer(freelancers);
-timerTwo(freelancers);
-timerThree(freelancers);
 
 
  
